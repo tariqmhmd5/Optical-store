@@ -1,5 +1,12 @@
 {% extends 'base.html' %}
 
+{% block css %}
+  #imgg{
+    width: 500px !important;
+    height: 200px !important;
+  }
+{% endblock css %}
+
 {% block body %}
 
 <div class="container-fluid">
@@ -19,50 +26,21 @@
 
 <div class="container-fluid">
   <div class="row p-2">
-  {% for i in product %}
+    {% for i in product %}
     <div class="col-md-4 p-2">
-      <a href="#exampleModalCenter" data-toggle="modal" data-target="">
-        <div class="card">
-          <img class="col-12 mx-auto pt-2 " src="/media/{{ i.image }}" alt="Product">
-          <h5 class="text-center mt-1">{{ i.product_name }}</h5>
-          <p class="text-center">{{ i.desc }}</p>
-          <p class="text-center font-weight-bold">Rs. {{ i.price }}</p>
-        </div>
+      <a class="text-decoration-none" href="checkout/{{i.id}}">
+
+        <img id="imgg" class="col-12 pt-2" src="/media/{{ i.image }}" alt="Product">
+        <h5 class="text-center mt-1">{{ i.product_name }}</h5>
+        <p class="text-center">{{ i.desc }}</p>
+        <h5 class="text-center font-weight-bold">Rs. {{ i.price }}</h5>
       </a>
     </div>
-  {% endfor %}
-
-  
-</div>
-{% endblock body %}
+    {% endfor %}
 
 
-{% comment %} 700x350 {% endcomment %}
+  </div>
+  {% endblock body %}
 
 
-    {% block js %}
-    <script>
-    console.log('Working')
-
-    if(localStorage.getItem('cart') == null){
-        var cart = {};
-    }
-    else{
-        cart = JSON.parse(localStorage.getItem('cart'));
-    }
-    $('.cart').click(function(){
-        console.log('clicked');
-        var idstr = this.id.toString();
-        console.log(idstr);
-        if (cart[idstr] != undefined){
-            cart[idstr] = cart[idstr] + 1;
-        }
-        else{
-            cart[idstr] = 1;
-        }
-        console.log(cart);
-        localStorage.setItem('cart',JSON.stringify(cart));
-    });
-    
-    </script>
-    {% endblock js %}
+  {% comment %} 700x350 {% endcomment %}

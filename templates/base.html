@@ -33,9 +33,20 @@
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/style.css  ' %}" rel="stylesheet">
   <link href="{% static 'assets/css/login.css  ' %}" rel="stylesheet">
+  <link href="{% static 'assets/css/checkout.css  ' %}" rel="stylesheet">
 
   <!-- * License: https://bootstrapmade.com/license/
   ======================================================== -->
+  <style>
+    {% block css %}
+    {% endblock css %}
+
+  body{
+     overflow-x: hidden;
+  }
+
+  </style>
+
 </head>
 
 <body>
@@ -57,7 +68,6 @@
 
       <nav class="nav-menu float-right d-none d-lg-block">
         <ul>
-          <li class="active"><a href="index.html">Home</a></li>
           <li><a href="#about">About Us</a></li>
           <li><a href="#services">Services</a></li>
           <!-- <li class="drop-down"><a href="">Drop Down</a>
@@ -77,17 +87,20 @@
               <li><a href="#">Drop Down 5</a></li>
             </ul>
           </li> -->
-          <li>
-            <a href="#contact">Contact Us</a>
-          </li>
-          <li>
-            <a href="#appointment" class="appointment-btn scrollto">Book an Appointment</a>
-          </li>
+          
+
+          {% block appointment %}
+          {% endblock appointment %}
+
+
           <li>
             <a href="#" data-target="#login" data-toggle="modal"><i class="icofont-user-alt-5 icofont-3x"></i></a>
           </li>
           <li>
-            <a href="#" ><i class="icofont-shopping-cart icofont-3x"></i></a>
+            <a type="button" id="popelement" data-container="body" data-html="true" data-toggle="popover" data-placement="bottom" ><i class="icofont-shopping-cart icofont-3x"></i><span id="cart">(0)</span></a>
+
+
+
           </li>
           <!-- <li><a href="#portfolio">Signin</a></li>
           <li><a href="#team">Signup</a></li> -->
@@ -182,9 +195,45 @@
   <script src="{% static 'assets/vendor/owl.carousel/owl.carousel.min.js' %}"></script>
   <script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
   <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 
-  {% block js %}
-  {% endblock js %}
+  <script>
+  $('#popelement').popover()
+  document.getElementById("popelement").setAttribute('data-content','<h5>cart</h5>');
+  </script>
+
+
+
+    <script>
+    console.log('Working')
+  
+
+    if(localStorage.getItem('cart') == null){
+        var cart = {};
+    }
+    else{
+        cart = JSON.parse(localStorage.getItem('cart'));
+        document.getElementById('cart').innerHTML = Object.keys(cart).length;
+    }
+    $('.cart').click(function(){
+        console.log('clicked');
+        var idstr = this.id.toString();
+        console.log(idstr);
+        if (cart[idstr] != undefined){
+            cart[idstr] = cart[idstr] + 1;
+        }
+        else{
+            cart[idstr] = 1;
+        }
+        console.log(cart);
+        localStorage.setItem('cart',JSON.stringify(cart));
+        document.getElementById('cart').innerHTML = Object.keys(cart).length;
+    });
+    </script>
+    
+    {% block js %}
+    {% endblock js %}
 
 
   <!-- Template Main JS File -->
