@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Contact(models.Model):
     sno = models.AutoField(primary_key=True)
@@ -10,3 +11,12 @@ class Contact(models.Model):
 
     def __str__(self):
         return('Message from: ' + self.name)
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    phone = models.IntegerField()
+
+    def __str__(self):
+        return self.user.username
+    
