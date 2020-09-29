@@ -6,6 +6,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 
 def home(request):
+    return(render(request,'home/home.html'))
+
+def contact(request):
     if request.method=='POST':
         name = request.POST['name']
         email = request.POST['email']
@@ -14,11 +17,13 @@ def home(request):
 
         contact = Contact(name=name,email=email,subject=subject,message=message)
         contact.save()
-
         messages.success(request,"Message Sent!")
 
-
-    return(render(request,'home/home.html'))
+        return(render(request,'home/home.html'))
+        
+    else:
+        return(HttpResponse("404 Not found"))
+    
 
 def handleSignup(request):
     if request.method == 'POST':
@@ -30,16 +35,20 @@ def handleSignup(request):
         c_password = request.POST['c_password']
 
         if password==c_password:
-            myuser = User.objects.create_user(username,email,password)
-            name= fname.split(" ")
-            myuser.first_name = name[0]
-            myuser.last_name = name[-1]
-            myuser.save()
-            user = User.objects.get(username=username)
-            profile = UserProfile(user=user,phone=phone)
-            profile.save()
-            messages.success(request,"Your account is created sucessfully")
-            return(redirect('home'))
+            try:
+                myuser = User.objects.create_user(username,email,password)
+                name= fname.split(" ")
+                myuser.first_name = name[0]
+                myuser.last_name = name[-1]
+                myuser.save()
+                user = User.objects.get(username=username)
+                profile = UserProfile(user=user,phone=phone)
+                profile.save()
+                messages.success(request,"Your account is created sucessfully")
+                return(redirect('home'))
+            except Exception as e:
+                messages.warning(request,"User already registered. Try Login.")
+                return(redirect('home'))
             
         else:
             messages.error(request,"Password did not match. Try Again")

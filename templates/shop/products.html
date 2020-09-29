@@ -1,11 +1,6 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block css %}
-  #imgg{
-    width: 500px !important;
-    height: 200px !important;
-  }
-{% endblock css %}
 
 {% block body %}
 
@@ -23,24 +18,100 @@
   </div>
 </div>
 
-
-<div class="container-fluid">
-  <div class="row p-2">
-    {% for i in product %}
-    <div class="col-md-4 p-2">
-      <a class="text-decoration-none" href="checkout/{{i.id}}">
-
-        <img id="imgg" class="col-12 pt-2" src="/media/{{ i.image }}" alt="Product">
-        <h5 class="text-center mt-1">{{ i.product_name }}</h5>
-        <p class="text-center">{{ i.desc }}</p>
-        <h5 class="text-center font-weight-bold">Rs. {{ i.price }}</h5>
-      </a>
+<div class="col-12">
+  <div class="row">
+    <div class="col-12 text-center text-uppercase">
+      <h2>Men Eyewears</h2>
     </div>
-    {% endfor %}
-
-
+    <div class="col-12 py-3">
+      <div class="row">
+        {% for i in product %}
+        <div class="col-lg-3 col-sm-6 my-3">
+          <div class="col-12 bg-white text-center h-100 product-item">
+            <div class="row h-100">
+              <div class="col-12 p-0 mb-3">
+                <a href="view_product/{{i.id}}">
+                  <img id="imgg" src="/media/{{ i.image }}" class="img-fluid">
+                </a>
+              </div>
+              <div class="col-12 mb-3">
+                <a id="namepr{{ i.id }}" href="view_product/{{i.id}}" class="product-name">{{ i.product_name }}</a>
+              </div>
+              <div class="col-12 mb-3">
+                <span class="product-price-old">
+                  $500
+                </span>
+                <br>
+                <span class="product-price">
+                  Rs. {{ i.price }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
   </div>
-  {% endblock body %}
+</div>
 
 
-  {% comment %} 700x350 {% endcomment %}
+
+{% endblock body %}
+
+
+{% comment %}
+
+700x350
+
+<div class="row">
+
+  <!-- Product -->
+  <div class="col-lg-3 col-sm-6 my-3">
+    <div class="col-12 bg-white text-center h-100 product-item">
+      <div class="row h-100">
+        <div class="col-12 p-0 mb-3">
+          <a href="checkout/{{i.id}}">
+            <img src="/media/{{ i.image }}" class="img-fluid">
+          </a>
+        </div>
+        <div class="col-12 mb-3">
+          <a href="checkout/{{i.id}}" class="product-name">{{ i.product_name }}</a>
+        </div>
+        <div class="col-12 mb-3">
+          <span class="product-price-old">
+            $500
+          </span>
+          <br>
+          <span class="product-price">
+            Rs. {{ i.price }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+  <div class="container-fluid">
+    <div class="row p-2">
+      {% for i in product %}
+      <div class="col-md-4 p-2">
+        <a class="text-decoration-none" href="checkout/{{i.id}}">
+          <img id="imgg" class="col-12 pt-2" src="/media/{{ i.image }}" alt="Product">
+          <h5 class="text-center mt-1">{{ i.product_name }}</h5>
+          <p class="text-center">{{ i.desc }}</p>
+          <h5 class="text-center font-weight-bold">Rs. {{ i.price }}</h5>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+
+  {% endcomment %}

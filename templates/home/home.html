@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 
 
@@ -25,8 +26,8 @@
 {% block appointment %}
 
 <li>
-            <a href="#contact">Contact Us</a>
-          </li>
+  <a href="#contact">Contact Us</a>
+</li>
 
 <li>
   <a href="#appointment" class="appointment-btn scrollto">Book an Appointment</a>
@@ -107,7 +108,7 @@
 <main id="main">
 
 
-  <div class="d-flex mt-5 justify-content-center flex-wrap align-content-center">
+  <div class="d-flex mt-5 justify-content-center flex-wrap align-content-center bg-white">
     <div class="p-3 w-25 h-50">
       <a href="shop/"><img src="https://djgn3cwvdf3zo.cloudfront.net/newHomePAge/men_sunglasses.jpg" class="img-fluid"
           alt=""></a>
@@ -125,7 +126,6 @@
 
     <div class="section-title">
       <h2>FRESH ARRIVAL</h2>
-      <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem.</p>
     </div>
     <div class="row">
 
@@ -152,7 +152,7 @@
               </span>
             </div>
             <div class="col-12 mb-3 align-self-end">
-              <button class="btn appointment-btn" type="button"><i class="fas fa-cart-plus mr-2"></i>Add to
+              <button class="btn appointment-btn" type="button">Add to
                 cart</button>
             </div>
           </div>
@@ -235,7 +235,7 @@
               </span>
             </div>
             <div class="col-12 mb-3 align-self-end">
-              <button class="btn appointment-btn" type="button"><i class="fas fa-cart-plus mr-2"></i>Add to
+              <button class="btn appointment-btn" type="button">Add to
                 cart</button>
             </div>
           </div>
@@ -307,29 +307,25 @@
         <h2>Make an Appointment</h2>
       </div>
 
-      <form action="forms/appointment.php" method="post" role="form" class="php-email-form">
+      <form action="" method="post" role="form">
         <div class="form-row">
           <div class="col-md-4 form-group">
             <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" data-rule="minlen:4"
               data-msg="Please enter at least 4 chars">
-            <div class="validate"></div>
           </div>
           <div class="col-md-4 form-group">
             <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" data-rule="email"
               data-msg="Please enter a valid email">
-            <div class="validate"></div>
           </div>
           <div class="col-md-4 form-group">
-            <input type="tel" class="form-control" name="phone" id="phone" placeholder="Your Phone" data-rule="minlen:4"
-              data-msg="Please enter at least 4 chars">
-            <div class="validate"></div>
+            <input type="tel" class="form-control" name="phone" id="phone" placeholder="Your Phone"
+              data-rule="minlen:4">
           </div>
         </div>
         <div class="form-row">
           <div class="col-md-4 form-group">
             <input type="date" name="date" class="form-control datepicker" id="date" placeholder="Appointment Date"
               data-rule="minlen:4" data-msg="Please enter at least 4 chars">
-            <div class="validate"></div>
           </div>
           <div class="col-md-4 form-group">
             <select name="department" id="department" class="form-control">
@@ -338,7 +334,7 @@
               <option value="Department 2">Department 2</option>
               <option value="Department 3">Department 3</option>
             </select>
-            <div class="validate"></div>
+
           </div>
           <div class="col-md-4 form-group">
             <select name="doctor" id="doctor" class="form-control">
@@ -347,20 +343,12 @@
               <option value="Doctor 2">Doctor 2</option>
               <option value="Doctor 3">Doctor 3</option>
             </select>
-            <div class="validate"></div>
           </div>
         </div>
 
         <div class="form-group">
           <textarea class="form-control" name="message" rows="5" placeholder="Message (Optional)"></textarea>
-          <div class="validate"></div>
-        </div>
-        <div class="mb-3">
-          <div class="loading">Loading</div>
-          <div class="error-message"></div>
-          <div class="sent-message">Your appointment request has been sent successfully. Thank you!</div>
-        </div>
-        <div class="text-center"><button type="submit">Make an Appointment</button></div>
+          <div class="text-center"><a class="appointment-btn mt-2" type="submit">Make an Appointment</a></div>
       </form>
 
     </div>
@@ -402,35 +390,33 @@
         </div>
 
         <div class="col-lg-12" data-aos="fade-up" data-aos-delay="300">
-          <form action="{% url 'home' %}" name="contact-form" method="post" role="form" class="php-email-form">
-          {% csrf_token %}
+          <form action="/contact" method="post">
+            {% csrf_token %}
             <div class="row">
               <div class="col-lg-6 form-group">
-                <input type="text" name="name" class="form-control" id="name" placeholder="Your Name"
-                  data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
-                
+                <input type="text" name="name" class="form-control" placeholder="Your Name" data-rule="minlen:4"
+                  data-msg="Please enter at least 4 chars" required>
+
               </div>
               <div class="col-lg-6 form-group">
-                <input type="email" class="form-control" name="email" id="email" placeholder="Your Email"
-                  data-rule="email" data-msg="Please enter a valid email" />
-                
+                <input type="email" class="form-control" name="email" placeholder="Your Email" data-rule="email"
+                  required>
+
               </div>
             </div>
             <div class="form-group">
-              <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject"
-                data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
-              
+              <input type="text" class="form-control" name="subject" placeholder="Subject" data-rule="minlen:4"
+                required>
+
             </div>
             <div class="form-group">
-              <textarea class="form-control" name="message" rows="5" data-rule="required"
-                data-msg="Please write something for us" placeholder="Message"></textarea>
-              
+              <textarea class="form-control" name="message" rows="5" placeholder="Message"></textarea>
+
             </div>
 
-            <div class="text-center"><button type="submit" onclick="submitForm()">Send Message</button></div>
+            <div class="text-center"><button class="btn appointment-btn" type="submit">Send Message</button></div>
           </form>
         </div>
-
       </div>
 
     </div>
@@ -438,21 +424,6 @@
 
 </main><!-- End #main -->
 
-{% block js %}
-<script>
 
-function submitForm() {
-   // Get the first form with the name
-   // Usually the form name is not repeated
-   // but duplicate names are possible in HTML
-   // Therefore to work around the issue, enforce the correct index
-   var frm = document.getElementsByName('contact-form')[0];
-   frm.submit(); // Submit the form
-   frm.reset();  // Reset all form data
-   return false; // Prevent page refresh
-}
-
-</script>
-{% endblock js %}
 
 {% endblock body %}

@@ -12,10 +12,12 @@ def products(request):
 def cart(request):
     return(render(request,'shop/cart.html'))
 
-def checkout(request,id):
+def checkout(request):
+    return(render(request,'shop/checkout.html'))
+
+def view_product(request,id):
     prod = Product.objects.filter(id=id)
-    print(prod)
     context = {
         'product':prod[0]
     }
-    return(render(request,'shop/checkout.html',context))
+    return(render(request,'shop/product_view.html',context))

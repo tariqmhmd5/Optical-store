@@ -34,18 +34,12 @@
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
   <link href="{% static 'assets/css/login.css' %}" rel="stylesheet">
-  <link href="{% static 'assets/css/checkout.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/css/shop.css' %}" rel="stylesheet">
 
   <!-- * License: https://bootstrapmade.com/license/
   ======================================================== -->
   <style>
-    {
-      % block css %
-    }
-
-      {
-      % endblock css %
-    }
+    {% block css %}{% endblock css %}
 
     body {
       overflow-x: hidden;
@@ -133,7 +127,7 @@
             <ul>
             <li><a href="#">Welcome {{ user.username }}</a></li>
             <li><a href="#"> My Account </a></li>
-            <li><a href="logout"> Logout </a></li>
+            <li><a href="{% url 'logout' %}"> Logout </a></li>
             </ul>
 
           </li>
@@ -149,8 +143,7 @@
 
 
           <li>
-            <a type="button" id="popelement" data-container="body" data-html="true" data-toggle="popover"
-              data-placement="bottom"><i class="icofont-shopping-cart icofont-3x"></i><span id="cart">(0)</span></a>
+            <a href="{% url 'cart' %}"><i class="icofont-shopping-cart icofont-3x"></i><span id="cart">(0)</span></a>
 
 
 
@@ -182,8 +175,8 @@
               <div class="form loginBox">
                 <form method="post" action="/login" accept-charset="UTF-8">
                   {% csrf_token %}
-                  <input minlength="5" class="form-control" type="text" placeholder="Username" name="username">
-                  <input id="password" class="form-control" type="password" placeholder="Password" name="password" minlength="8" required>
+                  <input minlength="5" class="form-control" type="text" placeholder="Username" name="username" autocomplete="on">
+                  <input class="form-control" type="password" placeholder="Password" name="password" minlength="8" autocomplete="on" required>
                   <input class="btn btn-default btn-login" type="submit" value="Login">
                 </form>
               </div>
@@ -192,16 +185,16 @@
           <div class="box">
             <div class="content registerBox" style="display:none;">
               <div class="form">
-                <form method="post" html="{:multipart=>true}" data-remote="true" action="/register" accept-charset="UTF-8">
+                <form method="post" action="/register">
                 {% csrf_token %}
-                  <input class="form-control" type="text" placeholder="Username" name="username" minlength="5" required>
+                  <input class="form-control" type="text" placeholder="Username" name="username" minlength="5" autocomplete="on" required>
                   <input class="form-control" type="text" placeholder="Full Name" name="fname" required>
-                  <input id="email" class="form-control mb-2 text-dark" type="email" placeholder="Email" name="email" required>
+                  <input class="form-control mb-2 text-dark" type="email" placeholder="Email" name="email" autocomplete="on" required>
                   <input class="form-control mb-2 text-dark" type="tel" placeholder="10 Digit Mobile Number" name="phone" pattern="[0-9]{10}" required>
-                  <input id="password" class="form-control" type="password" placeholder="Password" name="password" minlength="8" required>
-                  <input id="password_confirmation" class="form-control" type="password" placeholder="Confirm Password"
-                    name="c_password" minlength="8" required>
-                  <input class="btn btn-default btn-register" type="submit" value="Create account" name="commit">
+                  <input class="form-control" type="password" placeholder="Password" name="password" minlength="8" autocomplete="on" required>
+                  <input  class="form-control" type="password" placeholder="Confirm Password"
+                    name="c_password" autocomplete="on" minlength="8" required>
+                  <input class="btn btn-default btn-register" type="submit" value="Create account">
                 </form>
               </div>
             </div>
@@ -253,45 +246,11 @@
     integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
     crossorigin="anonymous"></script>
 
-  <script>
-    $('#popelement').popover()
-    document.getElementById("popelement").setAttribute('data-content', '<h5>cart</h5>');
-  </script>
-
-
-
-  <script>
-    console.log('Working')
-
-
-    if (localStorage.getItem('cart') == null) {
-      var cart = {};
-    }
-    else {
-      cart = JSON.parse(localStorage.getItem('cart'));
-      document.getElementById('cart').innerHTML = Object.keys(cart).length;
-    }
-    $('.cart').click(function () {
-      console.log('clicked');
-      var idstr = this.id.toString();
-      console.log(idstr);
-      if (cart[idstr] != undefined) {
-        cart[idstr] = cart[idstr] + 1;
-      }
-      else {
-        cart[idstr] = 1;
-      }
-      console.log(cart);
-      localStorage.setItem('cart', JSON.stringify(cart));
-      document.getElementById('cart').innerHTML = Object.keys(cart).length;
-    });
-  </script>
-
-  {% block js %}
-  {% endblock js %}
 
 
   <!-- Template Main JS File -->
+  <script src="{% static 'assets/js/cart.js' %}"></script>
   <script src="{% static 'assets/js/main.js' %}"></script>
   <script src="{% static 'assets/js/login.js' %}"></script>
+  <script src="{% static 'assets/js/shop.js' %}"></script>
 </body>
