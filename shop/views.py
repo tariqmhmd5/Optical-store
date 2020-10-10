@@ -1,25 +1,45 @@
 from django.shortcuts import render, HttpResponse
 from . models import *
+from django.http import JsonResponse
+import json 
 
 def products(request):
     products = Product.objects.all()
-    params = {'product':products}
+
+    if request.user.is_authenticated:   
+        customer = request.user.customer
+        order, created = Order.objects.get_or_create(customer=customer,complete=False)
+        global cartItems
+        cartItems = order.get_cart_items
+        print(cartItems)
+    else:
+        items = []
+        order = {'get_cart_total':0,"get_cart_items":0}
+        cartItems = order['get_cart_items']
+        #return(HttpResponse("Nothing in Cart Login to Continue"))
+    
+
+    params = {'product':products, 'cartItems':cartItems}
     return(render(request,'shop/products.html',params))
 
 
 def cart(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated:   
         customer = request.user.customer
         order, created = Order.objects.get_or_create(customer=customer,complete=False)
         items = order.orderitem_set.all()
+        cartItems = order.get_cart_items
+        print(cartItems)
     else:
         items = []
         order = {'get_cart_total':0,"get_cart_items":0}
+        cartItems = order['get_cart_items']
         #return(HttpResponse("Nothing in Cart Login to Continue"))
     
     context = {
         'items':items,
-        'order':order
+        'order':order,
+        'cartItems':cartItems
     }
     return(render(request,'shop/cart.html',context))
 
@@ -28,20 +48,47 @@ def checkout(request):
         customer = request.user.customer
         order, created = Order.objects.get_or_create(customer=customer,complete=False)
         items = order.orderitem_set.all()
+        cartItems = order.get_cart_items
     else:
         items = []
         order = {'get_cart_total':0,"get_cart_items":0}
+        cartItems = order['get_cart_items']
         #return(HttpResponse("Nothing in Cart Login to Continue"))
     
     context = {
         'items':items,
-        'order':order
+        'order':order,
+        'cartItems':cartItems
     }
     return(render(request,'shop/checkout.html',context))
 
 def view_product(request,id):
     prod = Product.objects.filter(id=id)
     context = {
-        'product':prod[0]
+        'product':prod[0],
+        'cartItems':cartItems
     }
     return(render(request,'shop/product_view.html',context))
+
+def updateItem(request):
+    data = json.loads(request.body)
+    productId = data['productId']
+    action = data['action']
+
+    customer = request.user.customer 
+    product = Product.objects.get(id=productId)
+    order, created = Order.objects.get_or_create(customer=customer,complete=False)
+    orderItem, created = OrderItem.objects.get_or_create(order=order, product=product) 
+
+    if action=='add':
+        orderItem.quantity = (orderItem.quantity+1)
+    elif action == 'remove':
+        orderItem.quantity = (orderItem.quantity-1)
+    
+    orderItem.save()
+
+    if orderItem.quantity <= 0:
+        orderItem.delete()
+
+
+    return JsonResponse("Item was added in theeeeee carrtt", safe=False)

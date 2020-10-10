@@ -2,7 +2,6 @@
 {% load static %}
 
 
-
 {% block topbar %}
 <!-- ======= Top Bar ======= -->
 <section id="topbar" class="d-none d-lg-block">
@@ -34,6 +33,8 @@
 </li>
 
 {% endblock appointment %}
+
+{% block cart %} {{cartItems}} {% endblock cart %}
 
 
 {% block body %}

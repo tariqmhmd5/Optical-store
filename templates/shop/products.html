@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block cart %} {{ cartItems }} {% endblock cart %}
 
 {% block body %}
 
@@ -35,17 +36,18 @@
                 </a>
               </div>
               <div class="col-12 mb-3">
-                <a id="namepr{{ i.id }}" href="view_product/{{i.id}}" class="product-name">{{ i.product_name }}</a>
+                <a  href="view_product/{{i.id}}" class="product-name">{{ i.product_name }}</a>
               </div>
               <div class="col-12 mb-3">
-                <span class="product-price-old">
+                {% comment %} <span class="product-price-old">
                   $500
                 </span>
-                <br>
+                <br> {% endcomment %}
                 <span class="product-price">
                   Rs. {{ i.price }}
                 </span>
               </div>
+                <button data-product={{i.id}} data-action="add" class="btn appointment-btn update-cart" type="button"></i>Add to cart</button>
             </div>
           </div>
         </div>

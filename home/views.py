@@ -4,9 +4,25 @@ from . models import Contact
 from . models import UserProfile
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from shop.models import *
 
 def home(request):
-    return(render(request,'home/home.html'))
+    if request.user.is_authenticated:   
+        customer = request.user.customer
+        order, created = Order.objects.get_or_create(customer=customer,complete=False)
+        items = order.orderitem_set.all()
+        cartItems = order.get_cart_items
+    else:
+        items = []
+        order = {'get_cart_total':0,"get_cart_items":0}
+        cartItems = order['get_cart_items']
+        #return(HttpResponse("Nothing in Cart Login to Continue"))
+    
+    context = {
+        'cartItems':cartItems
+    }
+
+    return(render(request,'home/home.html',context))
 
 def contact(request):
     if request.method=='POST':
@@ -44,6 +60,10 @@ def handleSignup(request):
                 user = User.objects.get(username=username)
                 profile = UserProfile(user=user,phone=phone)
                 profile.save()
+                
+                customer = Customer(user=user,name=fname,email=email)
+                customer.save()
+
                 messages.success(request,"Your account is created sucessfully")
                 return(redirect('home'))
             except Exception as e:
