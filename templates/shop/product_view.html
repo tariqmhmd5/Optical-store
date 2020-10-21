@@ -64,6 +64,9 @@
                             <li>Video Card NVIDIA® GeForce® RTX 2080 with 8GB GDDR6</li>
                         </ul>
                         <div class="col-12 mt-3 text-center">
+                        <h3><strong>
+                                    <b>Rs. {{ product.price }}</b>
+                                </strong></h3>
                                 <button data-product={{product.id}} data-action="add" class="btn appointment-btn update-cart" type="button"> Add to cart </button>
                             </div>
                     </div>
@@ -109,7 +112,7 @@
 
 
 
-    <!-- Similar Product -->
+    {% comment %} Similar Product
     <div class="col-12">
         <div class="row">
             <div class="col-12 py-3">
@@ -227,7 +230,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> {% endcomment %}
     <!-- Similar Products -->
 </div>
 {% endblock body %}

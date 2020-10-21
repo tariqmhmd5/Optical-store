@@ -1,5 +1,6 @@
 // Product view js
 
+
 $(function () {
 
     $('.nav-item.dropdown').mouseenter(function () {

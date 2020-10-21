@@ -52,12 +52,17 @@ class OrderItem(models.Model):
     def get_total(self):
         total = self.product.price * self.quantity
         return total
-
+    def __str__(self):
+        return self.product.product_name
+    
 
 class ShippingAddress(models.Model):
     customer = models.ForeignKey(Customer,on_delete=models.SET_NULL,blank=True,null=True)   
     order = models.ForeignKey(Order,on_delete=models.SET_NULL,blank=True,null=True)
     date_added = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length=100,null=True)
+    email = models.CharField(max_length=100,null=True)
+    phone = models.IntegerField(null=True)
     address = models.CharField(max_length=100,null=True)
     city = models.CharField(max_length=100,null=True)
     state = models.CharField(max_length=100,null=True)

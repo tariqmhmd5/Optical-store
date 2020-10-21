@@ -5,24 +5,31 @@
 
 {% block body %}
 
-<div class="container-fluid">
+{% comment %} <div class="container-fluid">
   <div class="row">
     <div class="col">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
-          {% comment %} <li class="breadcrumb-item"><a href="category.html">Category</a></li> {% endcomment %}
           <li class="breadcrumb-item active" aria-current="page">Men Eyewear</li>
         </ol>
       </nav>
     </div>
   </div>
+</div> {% endcomment %}
+
+<div class="container">
+<form class="row" action="">
+<input class="form-control" type="text" placeholder="Search" aria-label="Search">
+<div class="text-center"><button class="btn appointment-btn mt-2 mb-3" type="submit">Search</button></div>
+</form>
+
 </div>
 
 <div class="col-12">
   <div class="row">
     <div class="col-12 text-center text-uppercase">
-      <h2>Men Eyewears</h2>
+      <h2>Latest Products</h2>
     </div>
     <div class="col-12 py-3">
       <div class="row">

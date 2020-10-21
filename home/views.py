@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
-from . models import Contact
+from . models import *
 from . models import UserProfile
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -34,6 +34,25 @@ def contact(request):
         contact = Contact(name=name,email=email,subject=subject,message=message)
         contact.save()
         messages.success(request,"Message Sent!")
+
+        return(render(request,'home/home.html'))
+        
+    else:
+        return(HttpResponse("404 Not found"))
+
+
+def appointment(request):
+    if request.method=='POST':
+        fname = request.POST['fname']
+        lname = request.POST['lname']
+        phone = request.POST['phone']
+        date = request.POST['date']
+        email = request.POST['email']
+        message = request.POST['message']
+
+        appoin = Appointment(fname=fname,lname=lname,email=email,phone=phone,date=date,message=message)
+        appoin.save()
+        messages.success(request,"Appointment Booked!")
 
         return(render(request,'home/home.html'))
         

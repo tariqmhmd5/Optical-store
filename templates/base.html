@@ -112,7 +112,7 @@ const csrftoken = getCookie('csrftoken');
       </div>
 
       <nav class="nav-menu float-right d-none d-lg-block">
-        <ul>
+        <ul>  
           <li><a href="#about">About Us</a></li>
           <li><a href="#services">Services</a></li>
           <!-- <li class="drop-down"><a href="">Drop Down</a>
@@ -143,6 +143,7 @@ const csrftoken = getCookie('csrftoken');
             <ul>
             <li><a href="#">Welcome {{ user.username }}</a></li>
             <li><a href="#"> My Account </a></li>
+            <li><a href="{% url 'myorders' %}"> My Orders </a></li>
             <li><a href="{% url 'logout' %}"> Logout </a></li>
             </ul>
 
@@ -155,14 +156,11 @@ const csrftoken = getCookie('csrftoken');
           {% endif %}
 
 
-
-
-
           <li>
             <a href="{% url 'cart' %}"><i class="icofont-shopping-cart icofont-3x"></i><span id="cart">({% block cart %}{% endblock cart %})</span></a>
           </li>
-          <!-- <li><a href="#portfolio">Signin</a></li>
-          <li><a href="#team">Signup</a></li> -->
+
+
         </ul>
       </nav><!-- .nav-menu -->
     </div>
@@ -259,10 +257,14 @@ const csrftoken = getCookie('csrftoken');
     integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
     crossorigin="anonymous"></script>
 
-
+<script>
+{% block js %}
+{% endblock js %}
+</script>
 
   <!-- Template Main JS File -->
   <script src="{% static 'assets/js/cart.js' %}"></script>
+  <script src="{% static 'assets/js/checkout.js' %}"></script>
   <script src="{% static 'assets/js/main.js' %}"></script>
   <script src="{% static 'assets/js/login.js' %}"></script>
   <script src="{% static 'assets/js/shop.js' %}"></script>
