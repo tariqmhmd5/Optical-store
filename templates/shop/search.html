@@ -18,23 +18,14 @@
   </div>
 </div> {% endcomment %}
 
-<div class="container">
-<form class="row" action="search" method="POST">
-{% csrf_token %}
-<input class="form-control" type="text" name="query" placeholder="Search" aria-label="Search">
-<div class="text-center"><button class="btn appointment-btn mt-2 mb-3" type="submit">Search</button></div>
-</form>
-
-</div>
-
 <div class="col-12">
   <div class="row">
     <div class="col-12 text-center text-uppercase">
-      <h2>Latest Products</h2>
+      <h2>Search Results</h2>
     </div>
     <div class="col-12 py-3">
       <div class="row">
-        {% for i in product %}
+        {% for i in allsearch %}
         <div class="col-lg-3 col-sm-6 my-3">
           <div class="col-12 bg-white text-center h-100 product-item">
             <div class="row h-100">
@@ -55,13 +46,7 @@
                   Rs. {{ i.price }}
                 </span>
               </div>
-            {% if user.is_authenticated %}
-              <button data-product="{{i.id}}" data-action="add" class="btn appointment-btn update-cart" type="button">Add to
-                cart</button> 
-            {% else %}
-            <button data-toggle="modal" href="javascript:void(0)" onclick="openLoginModal();" class="btn appointment-btn" type="button">Add to
-                cart</button>
-            {% endif %}
+                <button data-product={{i.id}} data-action="add" class="btn appointment-btn update-cart" type="button"></i>Add to cart</button>
             </div>
           </div>
         </div>
@@ -70,6 +55,9 @@
     </div>
   </div>
 </div>
+
+
+
 {% endblock body %}
 
 

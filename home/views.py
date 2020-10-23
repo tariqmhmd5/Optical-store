@@ -6,8 +6,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from shop.models import *
 
-def home(request):
-    if request.user.is_authenticated:   
+def home(request):  
+    prod = Product.objects.all().order_by('-pub_date')[:4]
+    if request.user.is_authenticated:
         customer = request.user.customer
         order, created = Order.objects.get_or_create(customer=customer,complete=False)
         items = order.orderitem_set.all()
@@ -19,7 +20,8 @@ def home(request):
         #return(HttpResponse("Nothing in Cart Login to Continue"))
     
     context = {
-        'cartItems':cartItems
+        'cartItems':cartItems,
+        'products':prod
     }
 
     return(render(request,'home/home.html',context))

@@ -15,11 +15,12 @@ class Product(models.Model):
     desc = models.CharField(max_length=300)
     category = models.CharField(max_length=50,default="",choices=(('Men Eyewear','Men Eyewear'),('Women Eyewear','Women Eyewear')))
     price = models.IntegerField(default=0)
-    pub_date = models.DateField()
+    pub_date = models.DateField(auto_now_add=True)
     image = models.ImageField(upload_to='products/images',default="")
 
     def __str__(self):
         return self.product_name
+
 
 class Order(models.Model):
     customer = models.ForeignKey(Customer,on_delete=models.SET_NULL,blank=True,null=True)

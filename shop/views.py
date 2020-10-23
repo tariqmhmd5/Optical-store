@@ -2,6 +2,7 @@ from django.shortcuts import render, HttpResponse
 from . models import *
 from django.http import JsonResponse
 import json
+from django.contrib import messages
 import datetime
 
 def men(request):
@@ -39,6 +40,36 @@ def women(request):
     params = {'product':products, 'cartItems':cartItems}
     return(render(request,'shop/products.html',params))
 
+def search(request):
+    if request.user.is_authenticated:   
+        customer = request.user.customer
+        order, created = Order.objects.get_or_create(customer=customer,complete=False)
+        items = order.orderitem_set.all()
+        cartItems = order.get_cart_items   
+    else:
+        items = []
+        order = {'get_cart_total':0,"get_cart_items":0}
+        cartItems = order['get_cart_items']
+
+    query = request.POST['query']
+    if len(query)>78:
+        allsearch = Product.objects.none()
+    else:
+        name = Product.objects.filter(product_name__icontains=query)
+        desc = Product.objects.filter(desc__icontains=query)
+        allsearch = name.union(desc)
+        
+    
+    context = {
+            'allsearch': allsearch,
+            'query': query,
+            'cartItems':cartItems
+        }
+
+    if allsearch.count() == 0:
+        messages.warning(request,"No Search results")
+    
+    return(render(request,'shop/search.html',context))
 
 def cart(request):
     if request.user.is_authenticated:   
@@ -60,7 +91,6 @@ def cart(request):
     return(render(request,'shop/cart.html',context))
 
 def my_orders(request):
-    print('inside')
     if request.user.is_authenticated:   
         customer = request.user.customer
         
@@ -73,6 +103,7 @@ def my_orders(request):
         #items = order.orderitem_set.all()
         #cartItems = order.get_cart_items
     else:
+        messages.warning(request,'Login to view Myorders.')
         items = []
         order = {'get_cart_total':0,"get_cart_items":0}
         cartItems = order['get_cart_items']
@@ -109,11 +140,17 @@ def view_product(request,id):
         customer = request.user.customer
         order, created = Order.objects.get_or_create(customer=customer,complete=False)
         cartItems = order.get_cart_items
-    prod = Product.objects.filter(id=id)
-    context = {
+        prod = Product.objects.filter(id=id)
+        context = {
         'product':prod[0],
         'cartItems':cartItems
-    }
+        }
+    else:
+        prod = Product.objects.filter(id=id)
+        context = {
+        'product':prod[0],
+        }
+
     return(render(request,'shop/product_view.html',context))
 
 def updateItem(request):
@@ -121,13 +158,15 @@ def updateItem(request):
     productId = data['productId']
     action = data['action']
 
-    customer = request.user.customer 
+    customer = request.user.customer
+    
     product = Product.objects.get(id=productId)
     order, created = Order.objects.get_or_create(customer=customer,complete=False)
     orderItem, created = OrderItem.objects.get_or_create(order=order, product=product) 
 
     if action=='add':
         orderItem.quantity = (orderItem.quantity+1)
+        messages.success(request,"Added to cart")
     elif action == 'remove':
         orderItem.quantity = (orderItem.quantity-1)
     
@@ -164,6 +203,7 @@ def processOrder(request):
             state = data['shipping']['state'],
             zipcode = data['shipping']['zipcode'],
         )
+        messages.success(request,"Order Placed")
 
 
     return JsonResponse("Payment Complete",safe=False)

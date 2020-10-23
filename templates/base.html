@@ -69,6 +69,11 @@ const csrftoken = getCookie('csrftoken');
     max-width: calc(100vw - 2rem);
     z-index: 1080;
   }
+
+  .imgg{
+    width: 500px !important;
+    height: 200px !important;
+    }
   
   .message-holder .alert {
     box-shadow: #707070 1px 2px 5px;
@@ -113,8 +118,6 @@ const csrftoken = getCookie('csrftoken');
 
       <nav class="nav-menu float-right d-none d-lg-block">
         <ul>  
-          <li><a href="#about">About Us</a></li>
-          <li><a href="#services">Services</a></li>
           <!-- <li class="drop-down"><a href="">Drop Down</a>
             <ul>
               <li><a href="#">Drop Down 1</a></li>
@@ -142,23 +145,25 @@ const csrftoken = getCookie('csrftoken');
             <a href=""><i class="icofont-user-alt-5 icofont-3x"></i></a>
             <ul>
             <li><a href="#">Welcome {{ user.username }}</a></li>
-            <li><a href="#"> My Account </a></li>
             <li><a href="{% url 'myorders' %}"> My Orders </a></li>
             <li><a href="{% url 'logout' %}"> Logout </a></li>
             </ul>
 
+          </li>
+          <li>
+            <a href="{% url 'cart' %}"><i class="icofont-shopping-cart icofont-3x"></i><span id="cart">({% block cart %}{% endblock cart %})</span></a>
           </li>
           {% else %}
           <li>
             <a href="#" data-toggle="modal" href="javascript:void(0)" onclick="openLoginModal();"><i
                 class="icofont-user-alt-5 icofont-3x"></i></a>
           </li>
+          <li>
+            <a data-toggle="modal" href="javascript:void(0)" onclick="openLoginModal();"><i class="icofont-shopping-cart icofont-3x"></i></a>
+          </li>
           {% endif %}
 
 
-          <li>
-            <a href="{% url 'cart' %}"><i class="icofont-shopping-cart icofont-3x"></i><span id="cart">({% block cart %}{% endblock cart %})</span></a>
-          </li>
 
 
         </ul>
