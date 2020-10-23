@@ -1,23 +1,209 @@
-from django.shortcuts import render
-from .models import Product
-from math import ceil
+from django.shortcuts import render, HttpResponse
+from . models import *
+from django.http import JsonResponse
+import json
+from django.contrib import messages
+import datetime
 
-def products(request):
-    products = Product.objects.all()
-    n= len(products)
-    params = {'product':products}
+def men(request):
+    products = Product.objects.filter(category="Men Eyewear")
+
+    if request.user.is_authenticated:   
+        customer = request.user.customer
+        order, created = Order.objects.get_or_create(customer=customer,complete=False)
+        cartItems = order.get_cart_items
+    else:
+        items = []
+        order = {'get_cart_total':0,"get_cart_items":0}
+        cartItems = order['get_cart_items']
+        #return(HttpResponse("Nothing in Cart Login to Continue"))
+    
+
+    params = {'product':products, 'cartItems':cartItems}
     return(render(request,'shop/products.html',params))
 
 
+def women(request):
+    products = Product.objects.filter(category="Women Eyewear")
+
+    if request.user.is_authenticated:   
+        customer = request.user.customer
+        order, created = Order.objects.get_or_create(customer=customer,complete=False)
+        cartItems = order.get_cart_items
+    else:
+        items = []
+        order = {'get_cart_total':0,"get_cart_items":0}
+        cartItems = order['get_cart_items']
+        #return(HttpResponse("Nothing in Cart Login to Continue"))
+    
+
+    params = {'product':products, 'cartItems':cartItems}
+    return(render(request,'shop/products.html',params))
+
+def search(request):
+    if request.user.is_authenticated:   
+        customer = request.user.customer
+        order, created = Order.objects.get_or_create(customer=customer,complete=False)
+        items = order.orderitem_set.all()
+        cartItems = order.get_cart_items   
+    else:
+        items = []
+        order = {'get_cart_total':0,"get_cart_items":0}
+        cartItems = order['get_cart_items']
+
+    query = request.POST['query']
+    if len(query)>78:
+        allsearch = Product.objects.none()
+    else:
+        name = Product.objects.filter(product_name__icontains=query)
+        desc = Product.objects.filter(desc__icontains=query)
+        allsearch = name.union(desc)
+        
+    
+    context = {
+            'allsearch': allsearch,
+            'query': query,
+            'cartItems':cartItems
+        }
+
+    if allsearch.count() == 0:
+        messages.warning(request,"No Search results")
+    
+    return(render(request,'shop/search.html',context))
+
 def cart(request):
-    return(render(request,'shop/cart.html'))
+    if request.user.is_authenticated:   
+        customer = request.user.customer
+        order, created = Order.objects.get_or_create(customer=customer,complete=False)
+        items = order.orderitem_set.all()
+        cartItems = order.get_cart_items
+    else:
+        items = []
+        order = {'get_cart_total':0,"get_cart_items":0}
+        cartItems = order['get_cart_items']
+        #return(HttpResponse("Nothing in Cart Login to Continue"))
+    
+    context = {
+        'items':items,
+        'order':order,
+        'cartItems':cartItems
+    }
+    return(render(request,'shop/cart.html',context))
+
+def my_orders(request):
+    if request.user.is_authenticated:   
+        customer = request.user.customer
+        
+        order = Order.objects.filter(customer=customer,complete=True)
+        items = [OrderItem.objects.filter(order=i) for i in order]
+        ordered = []
+        for item_list in items:
+            for item in item_list:
+                ordered.append(item)
+        #items = order.orderitem_set.all()
+        #cartItems = order.get_cart_items
+    else:
+        messages.warning(request,'Login to view Myorders.')
+        items = []
+        order = {'get_cart_total':0,"get_cart_items":0}
+        cartItems = order['get_cart_items']
+        #return(HttpResponse("Nothing in Cart Login to Continue"))
+    
+    context = {
+        #'items':items,
+        'items': ordered
+        #'cartItems':cartItems
+    }
+    return(render(request,'shop/my_orders.html',context))
 
 def checkout(request):
-    return(render(request,'shop/checkout.html'))
+    if request.user.is_authenticated:
+        customer = request.user.customer
+        order, created = Order.objects.get_or_create(customer=customer,complete=False)
+        items = order.orderitem_set.all()
+        cartItems = order.get_cart_items
+    else:
+        items = []
+        order = {'get_cart_total':0,"get_cart_items":0}
+        cartItems = order['get_cart_items']
+        #return(HttpResponse("Nothing in Cart Login to Continue"))
+    
+    context = {
+        'items':items,
+        'order':order,
+        'cartItems':cartItems
+    }
+    return(render(request,'shop/checkout.html',context))
 
 def view_product(request,id):
-    prod = Product.objects.filter(id=id)
-    context = {
-        'product':prod[0]
-    }
+    if request.user.is_authenticated:   
+        customer = request.user.customer
+        order, created = Order.objects.get_or_create(customer=customer,complete=False)
+        cartItems = order.get_cart_items
+        prod = Product.objects.filter(id=id)
+        context = {
+        'product':prod[0],
+        'cartItems':cartItems
+        }
+    else:
+        prod = Product.objects.filter(id=id)
+        context = {
+        'product':prod[0],
+        }
+
     return(render(request,'shop/product_view.html',context))
+
+def updateItem(request):
+    data = json.loads(request.body)
+    productId = data['productId']
+    action = data['action']
+
+    customer = request.user.customer
+    
+    product = Product.objects.get(id=productId)
+    order, created = Order.objects.get_or_create(customer=customer,complete=False)
+    orderItem, created = OrderItem.objects.get_or_create(order=order, product=product) 
+
+    if action=='add':
+        orderItem.quantity = (orderItem.quantity+1)
+        messages.success(request,"Added to cart")
+    elif action == 'remove':
+        orderItem.quantity = (orderItem.quantity-1)
+    
+    orderItem.save()
+
+    if orderItem.quantity <= 0:
+        orderItem.delete()
+
+
+    return JsonResponse("Item was added in theeeeee carrtt", safe=False)
+
+def processOrder(request):
+    transaction_id = datetime.datetime.now().timestamp()
+    data = json.loads(request.body)
+    if request.user.is_authenticated:
+        customer = request.user.customer
+        
+        order, created = Order.objects.get_or_create(customer=customer,complete=False)
+        total = float(data['form']['total'])
+        order.transaction_id = transaction_id
+
+        if total == order.get_cart_total:
+            order.complete =True
+        order.save()
+
+        ShippingAddress.objects.create(
+            customer = customer,
+            order=order,
+            name= data['form']['name'],
+            email= data['form']['email'],
+            phone= data['form']['phone'],
+            address= data['shipping']['address'],
+            city = data['shipping']['city'],
+            state = data['shipping']['state'],
+            zipcode = data['shipping']['zipcode'],
+        )
+        messages.success(request,"Order Placed")
+
+
+    return JsonResponse("Payment Complete",safe=False)

@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block cart %} {{ cartItems }} {% endblock cart %}
+
 {% block body %}
 <div class="col-12">
     <main class="row">
@@ -42,29 +44,42 @@
                 <!-- Product Info -->
                 <div class="col-lg-5 col-md-9">
                     <div class="col-12 product-name large">
-                        Area 51M Gaming Laptop Welcome to A New ERA with 9TH GEN Intel CORE I9-9900K NVIDIA GEFORCE RTX
-                        2080
-                        8GB GDDR6 17.3" FHD 144HZ AG G-SYNC TOBII EYETRACKING (1TB SSD RAID|32GB RAM|10 PRO)
-                        <small>By <a href="#">Dell</a></small>
+                    {{ product.product_name }}
+                        <small>By <a href="#">Company Name</a></small>
                     </div>
                     <div class="col-12 px-0">
                         <hr>
                     </div>
                     <div class="col-12">
                         <ul>
-                            <li>Processor 8th Generation Intel Core i9-8950HK (6-Core, 12MB Cache, Overclocking up to
-                                5.0GHz)</li>
-                            <li>Memory 32GB DDR4-2666MHz, 2x16GB Ram Speed Gaming Performance</li>
-                            <li>Hard Drive 1TB SSD RAID 0 (2x 512GB PCIe NVME M.2 SSDs) + 1TB (+8GB SSHD) Hybrid Drive
-                            </li>
-                            <li>17.3" Full HD display 1920 x 1080 resolution boasts impressive color and clarity. IPS
-                                technology for wide viewing angles.</li>
-                            <li>Video Card NVIDIA® GeForce® RTX 2080 with 8GB GDDR6</li>
+                        <li> {{ product.desc }} </li>
+                        <li> Some Description </li>
+                        <li> Some Description </li>
+                        <li> Some Description </li>
+                        <li> Some Description </li>
+                        <li> Some Description </li>
+                        <li> Some Description </li>
                         </ul>
+                        <div class="col-12 mt-3 text-center">
+                            <h3><strong>
+                                    <b>Rs. {{ product.price }}</b>
+                                </strong></h3>
+
+                            {% if user.is_authenticated %}
+                            <button data-product="{{product.id}}" data-action="add"
+                                class="btn appointment-btn update-cart" type="button">Add to
+                                cart</button>
+                            {% else %}
+                            <button data-toggle="modal" href="javascript:void(0)" onclick="openLoginModal();"
+                                class="btn appointment-btn" type="button">Add to
+                                cart</button>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
                 <!-- Product Info -->
 
+                {% comment %}
                 <!-- Sidebar -->
                 <div class="col-lg-2 col-md-3 text-center">
                     <div class="col-12 border-left border-top sidebar h-100">
@@ -77,8 +92,8 @@
                                     $2,800
                                 </span> -->
                                 <h3><strong>
-                                    <b>Rs. {{ product.price }}</b>
-                                </strong></h3>
+                                        <b>Rs. {{ product.price }}</b>
+                                    </strong></h3>
                             </div>
                             <div class="col-xl-5 col-md-9 col-sm-3 col-5 mx-auto mt-3">
                                 <div class="form-group">
@@ -87,7 +102,7 @@
                                 </div>
                             </div>
                             <div class="col-12 mt-3">
-                                <button class="btn appointment-btn cart" id=pr{{ product.id }} type="button"></i>Add to cart</button>
+                                <button class="btn appointment-btn cart" type="button"> Buy Now </button>
                             </div>
                             <div class="col-12 mt-3">
                                 <button class="btn btn-outline-secondary btn-sm" type="button"><i
@@ -95,7 +110,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> {% endcomment %}
 
             </div>
         </div>
@@ -104,7 +119,7 @@
 
 
 
-    <!-- Similar Product -->
+    {% comment %} Similar Product
     <div class="col-12">
         <div class="row">
             <div class="col-12 py-3">
@@ -159,7 +174,8 @@
                                     </span>
                                 </div>
                                 <div class="col-12 mb-3 align-self-end">
-                                    <button class="btn btn-outline-dark" type="button"><i class="fas fa-cart-plus mr-2"></i>Add to cart</button>
+                                    <button class="btn btn-outline-dark" type="button"><i
+                                            class="fas fa-cart-plus mr-2"></i>Add to cart</button>
                                 </div>
                             </div>
                         </div>
@@ -187,7 +203,8 @@
                                     </span>
                                 </div>
                                 <div class="col-12 mb-3 align-self-end">
-                                    <button class="btn btn-outline-dark" type="button"><i class="fas fa-cart-plus mr-2"></i>Add to cart</button>
+                                    <button class="btn btn-outline-dark" type="button"><i
+                                            class="fas fa-cart-plus mr-2"></i>Add to cart</button>
                                 </div>
                             </div>
                         </div>
@@ -212,7 +229,7 @@
                                     </span>
                                 </div>
                                 <div class="col-12 mb-3 align-self-end">
-                                    <button class="btn btn-outline-dark" type="button"><i class="fas fa-cart-plus mr-2"></i>Add to cart</button>
+                                    <button class="btn btn-outline-dark" type="button">Add to cart</button>
                                 </div>
                             </div>
                         </div>
@@ -222,7 +239,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> {% endcomment %}
     <!-- Similar Products -->
 </div>
 {% endblock body %}

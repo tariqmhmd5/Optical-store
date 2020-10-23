@@ -1,12 +1,30 @@
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
-from . models import Contact
+from . models import *
 from . models import UserProfile
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from shop.models import *
 
-def home(request):
-    return(render(request,'home/home.html'))
+def home(request):  
+    prod = Product.objects.all().order_by('-pub_date')[:4]
+    if request.user.is_authenticated:
+        customer = request.user.customer
+        order, created = Order.objects.get_or_create(customer=customer,complete=False)
+        items = order.orderitem_set.all()
+        cartItems = order.get_cart_items
+    else:
+        items = []
+        order = {'get_cart_total':0,"get_cart_items":0}
+        cartItems = order['get_cart_items']
+        #return(HttpResponse("Nothing in Cart Login to Continue"))
+    
+    context = {
+        'cartItems':cartItems,
+        'products':prod
+    }
+
+    return(render(request,'home/home.html',context))
 
 def contact(request):
     if request.method=='POST':
@@ -18,6 +36,25 @@ def contact(request):
         contact = Contact(name=name,email=email,subject=subject,message=message)
         contact.save()
         messages.success(request,"Message Sent!")
+
+        return(render(request,'home/home.html'))
+        
+    else:
+        return(HttpResponse("404 Not found"))
+
+
+def appointment(request):
+    if request.method=='POST':
+        fname = request.POST['fname']
+        lname = request.POST['lname']
+        phone = request.POST['phone']
+        date = request.POST['date']
+        email = request.POST['email']
+        message = request.POST['message']
+
+        appoin = Appointment(fname=fname,lname=lname,email=email,phone=phone,date=date,message=message)
+        appoin.save()
+        messages.success(request,"Appointment Booked!")
 
         return(render(request,'home/home.html'))
         
@@ -44,6 +81,10 @@ def handleSignup(request):
                 user = User.objects.get(username=username)
                 profile = UserProfile(user=user,phone=phone)
                 profile.save()
+                
+                customer = Customer(user=user,name=fname,email=email)
+                customer.save()
+
                 messages.success(request,"Your account is created sucessfully")
                 return(redirect('home'))
             except Exception as e:

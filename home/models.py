@@ -12,6 +12,19 @@ class Contact(models.Model):
     def __str__(self):
         return('Message from: ' + self.name)
 
+
+class Appointment(models.Model):
+    sno = models.AutoField(primary_key=True)
+    fname = models.CharField(max_length=100)
+    lname = models.CharField(max_length=100)
+    phone = models.CharField(max_length=100)
+    email = models.CharField(max_length=100)
+    date = models.DateField(blank=True)
+    message = models.TextField(max_length=250)
+
+    def __str__(self):
+        return('Message from: ' + self.fname)
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
