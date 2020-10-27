@@ -14,6 +14,7 @@
 					<div style="flex:2"><strong>Product Image</strong></div>
 					<div style="flex:2"><strong>Item</strong></div>
 					<div style="flex:1"><strong>Price</strong></div>
+					<div style="flex:1"><strong>Quantity</strong></div>
 					<div style="flex:1"><strong>Ordered on</strong></div>
 					<div style="flex:1"><strong>transaction_id</strong></div>
 				</div>
@@ -23,6 +24,7 @@
 					<div style="flex:2"><img class="row-image" src="/media/{{ item.product.image }}"></div>
 					<div style="flex:2"><p>{{ item.product.product_name }}</p></div>
 					<div style="flex:1"><p>Rs. {{ item.product.price }}</p></div>
+					<div style="flex:1"><p> {{ item.quantity }}</p></div>
 					<div style="flex:1">
 						<p class="quantity">{{ item.order.date_ordered }}</p>
 					</div>

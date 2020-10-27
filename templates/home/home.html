@@ -66,27 +66,12 @@
 
         <!-- Slide 2 -->
         <div class="carousel-item" style="background-image: url(https://source.unsplash.com/1366x350/?eye);">
-          <div class="carousel-container">
-            <!-- <div class="carousel-content container">
-                <h2 class="animate__animated animate__fadeInDown">Lorem Ipsum Dolor</h2>
-                <p class="animate__animated animate__fadeInUp">Ut velit est quam dolor ad a aliquid qui aliquid. Sequi
-                  ea ut et est quaerat sequi nihil ut aliquam. Occaecati alias dolorem mollitia ut. Similique ea
-                  voluptatem. Esse doloremque accusamus repellendus deleniti vel. Minus et tempore modi architecto.</p>
-                <a href="#about" class="btn-get-started animate__animated animate__fadeInUp scrollto">Read More</a>
-              </div> -->
           </div>
         </div>
 
         <!-- Slide 3 -->
         <div class="carousel-item" style="background-image: url(https://source.unsplash.com/1366x350/?eyewear);">
           <div class="carousel-container">
-            <!-- <div class="carousel-content container">
-                <h2 class="animate__animated animate__fadeInDown">Sequi ea ut et est quaerat</h2>
-                <p class="animate__animated animate__fadeInUp">Ut velit est quam dolor ad a aliquid qui aliquid. Sequi
-                  ea ut et est quaerat sequi nihil ut aliquam. Occaecati alias dolorem mollitia ut. Similique ea
-                  voluptatem. Esse doloremque accusamus repellendus deleniti vel. Minus et tempore modi architecto.</p>
-                <a href="#about" class="btn-get-started animate__animated animate__fadeInUp scrollto">Read More</a>
-              </div> -->
           </div>
         </div>
 
@@ -114,12 +99,12 @@
 
   <div class="d-flex mt-5 justify-content-center flex-wrap align-content-center bg-white">
     <div class="p-3 w-25 h-50">
-      <a href="shop/men"><img src="https://djgn3cwvdf3zo.cloudfront.net/newHomePAge/men_sunglasses.jpg"
+      <a href="{% url 'men' %}"><img src="https://djgn3cwvdf3zo.cloudfront.net/newHomePAge/men_sunglasses.jpg"
           class="img-fluid" alt=""></a>
       <p class="text-center">Men Eyewear</p>
     </div>
     <div class="p-3 w-25 h-50">
-      <a href="shop/women"><img src="https://djgn3cwvdf3zo.cloudfront.net/newHomePAge/women-eyeglasses.jpg"
+      <a href="{% url 'women' %}"><img src="https://djgn3cwvdf3zo.cloudfront.net/newHomePAge/women-eyeglasses.jpg"
           class="img-fluid" alt="Women Eyewear"></a>
       <p class="text-center">Women Eyewear</p>
     </div>
@@ -138,7 +123,7 @@
         <div class="col-12 bg-white text-center h-100 product-item">
           <div class="row h-100">
             <div class="col-12 p-0 mb-3">
-              <a href="product.html">
+              <a href="shop/view_product/{{product.id}}">
                 <img id="immgg" src="/media/{{ product.image }}" class="img-fluid imgg">
               </a>
             </div>
@@ -172,59 +157,6 @@
     </div>
 
   </section>
-
-  <!-- 
-    <section class="counts section-bg">
-      <div class="container">
-
-        <div class="section-title">
-          <h2>FRESH ARRIVAL</h2>
-          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem.</p>
-        </div>
-
-        <div class="row">
-
-          <div class="col-lg-3 col-md-6 text-center" data-aos="fade-up">
-            <div class="count-box">
-              <img src="https://source.unsplash.com/random/300x150" alt="ok">
-               <i class="icofont-simple-smile" style="color: #20b38e;">
-               <span>₹232</span>
-              <p>Add to Cart</p>
-              <a href="#"><i class="icofont-cart-alt"></i></a>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-6 text-center" data-aos="fade-up" data-aos-delay="200">
-            <div class="count-box">
-              <img src="https://source.unsplash.com/random/150x150" alt="ok">
-              <span>₹521</span>
-              <p>Add to Cart</p>
-              <a href="#"><i class="icofont-cart-alt"></i></a>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-6 text-center" data-aos="fade-up" data-aos-delay="400">
-            <div class="count-box">
-              <img src="https://source.unsplash.com/random/150x150" alt="ok">
-              <span>₹1,463</span>
-              <p>Add to Cart</p>
-              <a href="#"><i class="icofont-cart-alt"></i></a>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-6 text-center" data-aos="fade-up" data-aos-delay="600">
-            <div class="count-box">
-              <img src="https://source.unsplash.com/random/150x150" alt="ok">
-              <span>₹15</span>
-              <p>Add to Cart</p>
-              <a href="#"><i class="icofont-cart-alt"></i></a>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-    </section>End Counts Section -->
 
   <!-- ======= Appointment Section ======= -->
   <section id="appointment" class="appointment section-bg">
@@ -340,21 +272,6 @@
             <p>Samrat Opticals Persistent efforts over the year to provide the latest specialties in opticals and eye
               care under one roof saved your valuable time from traveling to metro cities.</p>
           </div>
-
-          {% comment %} <div class="icon-box" data-aos="fade-up" data-aos-delay="100">
-            <div class="icon"><i class="bx bx-fingerprint"></i></div>
-            <h4 class="title"><a href="">Lorem Ipsum</a></h4>
-            <p class="description">Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint
-              occaecati cupiditate non provident</p>
-          </div>
-
-          <div class="icon-box" data-aos="fade-up" data-aos-delay="100">
-            <div class="icon"><i class="bx bx-gift"></i></div>
-            <h4 class="title"><a href="">Nemo Enim</a></h4>
-            <p class="description">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium
-              voluptatum deleniti atque</p>
-          </div> {% endcomment %}
-
         </div>
       </div>
 

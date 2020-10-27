@@ -9,8 +9,8 @@ def men(request):
     products = Product.objects.filter(category="Men Eyewear")
 
     if request.user.is_authenticated:   
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer,complete=False)
+        user = request.user
+        order, created = Order.objects.get_or_create(user=user,complete=False)
         cartItems = order.get_cart_items
     else:
         items = []
@@ -27,8 +27,8 @@ def women(request):
     products = Product.objects.filter(category="Women Eyewear")
 
     if request.user.is_authenticated:   
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer,complete=False)
+        user = request.user
+        order, created = Order.objects.get_or_create(user=user,complete=False)
         cartItems = order.get_cart_items
     else:
         items = []
@@ -42,8 +42,8 @@ def women(request):
 
 def search(request):
     if request.user.is_authenticated:   
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer,complete=False)
+        user = request.user
+        order, created = Order.objects.get_or_create(user=user,complete=False)
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items   
     else:
@@ -73,15 +73,19 @@ def search(request):
 
 def cart(request):
     if request.user.is_authenticated:   
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer,complete=False)
+        user = request.user
+        order, created = Order.objects.get_or_create(user=user,complete=False)
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items
+        if cartItems==0:
+            messages.warning(request,"Cart is Empty!")
+            return(render(request,'shop/cart.html'))
     else:
         items = []
         order = {'get_cart_total':0,"get_cart_items":0}
         cartItems = order['get_cart_items']
-        #return(HttpResponse("Nothing in Cart Login to Continue"))
+        messages.warning(request,"Login to Continue")
+        return(render(request,'home/home.html'))
     
     context = {
         'items':items,
@@ -92,9 +96,9 @@ def cart(request):
 
 def my_orders(request):
     if request.user.is_authenticated:   
-        customer = request.user.customer
+        user = request.user
         
-        order = Order.objects.filter(customer=customer,complete=True)
+        order = Order.objects.filter(user=user,complete=True)
         items = [OrderItem.objects.filter(order=i) for i in order]
         ordered = []
         for item_list in items:
@@ -102,6 +106,8 @@ def my_orders(request):
                 ordered.append(item)
         #items = order.orderitem_set.all()
         #cartItems = order.get_cart_items
+        if len(ordered)==0:
+            messages.warning(request,"Buy Something...")
     else:
         messages.warning(request,'Login to view Myorders.')
         items = []
@@ -118,15 +124,19 @@ def my_orders(request):
 
 def checkout(request):
     if request.user.is_authenticated:
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer,complete=False)
+        user = request.user
+        order, created = Order.objects.get_or_create(user=user,complete=False)
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items
+        if cartItems==0:
+            messages.warning(request,"Cart is Empty!")
+            return(render(request,'shop/cart.html'))
     else:
         items = []
         order = {'get_cart_total':0,"get_cart_items":0}
         cartItems = order['get_cart_items']
-        #return(HttpResponse("Nothing in Cart Login to Continue"))
+        messages.warning(request,"Login to Continue")
+        return(render(request,'home/home.html'))
     
     context = {
         'items':items,
@@ -137,8 +147,8 @@ def checkout(request):
 
 def view_product(request,id):
     if request.user.is_authenticated:   
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer,complete=False)
+        user = request.user
+        order, created = Order.objects.get_or_create(user=user,complete=False)
         cartItems = order.get_cart_items
         prod = Product.objects.filter(id=id)
         context = {
@@ -158,10 +168,10 @@ def updateItem(request):
     productId = data['productId']
     action = data['action']
 
-    customer = request.user.customer
+    user = request.user
     
     product = Product.objects.get(id=productId)
-    order, created = Order.objects.get_or_create(customer=customer,complete=False)
+    order, created = Order.objects.get_or_create(user=user,complete=False)
     orderItem, created = OrderItem.objects.get_or_create(order=order, product=product) 
 
     if action=='add':
@@ -182,9 +192,9 @@ def processOrder(request):
     transaction_id = datetime.datetime.now().timestamp()
     data = json.loads(request.body)
     if request.user.is_authenticated:
-        customer = request.user.customer
+        user = request.user
         
-        order, created = Order.objects.get_or_create(customer=customer,complete=False)
+        order, created = Order.objects.get_or_create(user=user,complete=False)
         total = float(data['form']['total'])
         order.transaction_id = transaction_id
 
@@ -193,7 +203,7 @@ def processOrder(request):
         order.save()
 
         ShippingAddress.objects.create(
-            customer = customer,
+            user = user,
             order=order,
             name= data['form']['name'],
             email= data['form']['email'],
