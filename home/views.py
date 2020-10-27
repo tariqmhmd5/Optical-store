@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
 from . models import *
-from . models import UserProfile
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from shop.models import *
@@ -9,8 +8,8 @@ from shop.models import *
 def home(request):  
     prod = Product.objects.all().order_by('-pub_date')[:4]
     if request.user.is_authenticated:
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer,complete=False)
+        user = request.user
+        order, created = Order.objects.get_or_create(user=user,complete=False)
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items
     else:
@@ -67,28 +66,22 @@ def handleSignup(request):
         username = request.POST['username']
         fname = request.POST['fname']
         email = request.POST['email']
-        phone = request.POST['phone']
         password = request.POST['password']
         c_password = request.POST['c_password']
 
         if password==c_password:
             try:
-                myuser = User.objects.create_user(username,email,password)
+                myuser = User.objects.create_user(username=username,email=email,password=password)
                 name= fname.split(" ")
                 myuser.first_name = name[0]
                 myuser.last_name = name[-1]
                 myuser.save()
                 user = User.objects.get(username=username)
-                profile = UserProfile(user=user,phone=phone)
-                profile.save()
-                
-                customer = Customer(user=user,name=fname,email=email)
-                customer.save()
 
-                messages.success(request,"Your account is created sucessfully")
+                messages.success(request,"Your account is created.")
                 return(redirect('home'))
-            except Exception as e:
-                messages.warning(request,"User already registered. Try Login.")
+            except:
+                messages.warning(request,"Already registered. Try Login.")
                 return(redirect('home'))
             
         else:
@@ -121,3 +114,28 @@ def handleLogout(request):
     logout(request)
     messages.success(request,"Logged out Sucessfully")
     return(redirect('home'))
+
+def getitems(request):
+    if request.user.is_superuser:
+        if request.method == 'POST':
+            orderId = request.POST['orderId']
+            
+            order = Order.objects.get(id=orderId,complete=True)
+            items = OrderItem.objects.filter(order=order)
+            address = ShippingAddress.objects.get(order=order)
+            
+            context = {
+                'order':order,
+                'items':items,
+                'address':address
+            }
+            return(render(request,'home/admin.html',context))
+        else:
+            context = {
+                'order':[],
+                'items':[],
+                'address':type('', (), {})()
+            }
+            return(render(request,'home/admin.html',context))
+    else:
+        return(HttpResponse("404 Not Fount"))

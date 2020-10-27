@@ -1,13 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-
-class Customer(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE ,null=True,blank=True)
-    name = models.CharField(max_length=100,null=True)
-    email = models.CharField(max_length=100,null=True)
-
-    def __str__(self):
-        return self.name
     
 
 class Product(models.Model):
@@ -23,7 +15,7 @@ class Product(models.Model):
 
 
 class Order(models.Model):
-    customer = models.ForeignKey(Customer,on_delete=models.SET_NULL,blank=True,null=True)
+    user = models.ForeignKey(User,on_delete=models.SET_NULL,blank=True,null=True)
     date_ordered = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField(default=False,null=True,blank=False)
     transaction_id = models.CharField(max_length=100,null=True)
@@ -58,7 +50,7 @@ class OrderItem(models.Model):
     
 
 class ShippingAddress(models.Model):
-    customer = models.ForeignKey(Customer,on_delete=models.SET_NULL,blank=True,null=True)   
+    user = models.ForeignKey(User,on_delete=models.SET_NULL,blank=True,null=True)   
     order = models.ForeignKey(Order,on_delete=models.SET_NULL,blank=True,null=True)
     date_added = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=100,null=True)

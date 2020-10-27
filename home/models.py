@@ -24,12 +24,4 @@ class Appointment(models.Model):
 
     def __str__(self):
         return('Message from: ' + self.fname)
-
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-    phone = models.IntegerField()
-
-    def __str__(self):
-        return self.user.username
     
